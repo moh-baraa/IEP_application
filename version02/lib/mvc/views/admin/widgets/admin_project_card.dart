@@ -11,155 +11,163 @@ class AdminProjectCard extends StatelessWidget {
   final ProjectModel project;
   final ProjectsManagerController controller;
   final ProjectsController projController;
-
   final bool isProjectFrozen;
-  final bool isOwnerFrozen;
 
   const AdminProjectCard({
     super.key,
     required this.project,
     required this.controller,
-    this.isProjectFrozen = false,
-    this.isOwnerFrozen = false,
     required this.projController,
+    this.isProjectFrozen = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.light;
-    final borderclr = colors.button;
 
     double progress = (project.targetFunds > 0)
-        ? (project.totalFunds! / project.targetFunds).clamp(0.0, 1.0)
+        ? (project.totalFunds / project.targetFunds).clamp(0.0, 1.0)
         : 0.0;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-      decoration: BoxDecoration(
-        color: colors.background,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isProjectFrozen ? colors.red.withOpacity(0.5) : borderclr,
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // === project card ===
-            SavedProjectCard(
-              title: project.title,
-              subtitle: project.description,
-              progress: progress,
-              imageUrl: project.images.isNotEmpty ? project.images.first : '',
-              showBookmarkIcon: false,
-            ),
-
-            // === owner information with chat button ===
-            _buildOwnerSection(context, colors, controller),
-
-            Divider(height: 1.5, color: borderclr),
-
-            // === controls buuton ===
-            _buildActionButtons(context, colors, controller),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildOwnerSection(
-    BuildContext context,
-    AppColorScheme colors,
-    ProjectsManagerController controller,
-  ) {
+    // === null safty protection ===
     if (project.ownerId == null || project.ownerId!.isEmpty) {
-      return const SizedBox();
+      // === the user not found, then show empty container ===
+      return Container(
+        height: 100,
+        margin: const EdgeInsets.all(8),
+        color: Colors.red.withOpacity(0.1),
+        child: const Center(child: Text("Project has no owner info!")),
+      );
     }
 
-    return FutureBuilder<DocumentSnapshot>(
-      future: FirebaseFirestore.instance
-          .collection('users')
-          .doc(project.ownerId)
-          .get(),
+    // === for user information and state ===
+    return StreamBuilder<DocumentSnapshot>(
+      stream: controller.getUserInfo(userId: project.ownerId!),
       builder: (context, snapshot) {
         String ownerName = "Loading...";
         String ownerImage = "";
+        bool isUserBlocked = false;
 
+        // === extract the data when arrive ===
         if (snapshot.hasData && snapshot.data!.exists) {
-          var data = snapshot.data!.data() as Map<String, dynamic>;
+          final data = snapshot.data!.data() as Map<String, dynamic>;
           ownerName =
               data['name'] ?? "${data['first_name']} ${data['last_name']}";
           ownerImage = data['avatar_url'] ?? "";
+          isUserBlocked = data['isBlocked'] ?? false;
         }
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 16,
-                backgroundImage: (ownerImage.isNotEmpty)
-                    ? NetworkImage(ownerImage)
-                    : null,
-                backgroundColor: colors.primary.withOpacity(0.1),
-                child: (ownerImage.isEmpty)
-                    ? Icon(Icons.person, size: 16, color: colors.primary)
-                    : null,
-              ),
-              const SizedBox(width: 8),
-
-              Expanded(
-                child: Text(
-                  ownerName,
-                  style: AppTextStyles.size14weight5(colors.text),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-
-              IconButton(
-                icon: Icon(
-                  Icons.chat_bubble_outline,
-                  color: colors.primary,
-                  size: 20,
-                ),
-                onPressed: () {
-                  controller.contactOwner(
-                    context,
-                    project: project,
-                    ownerName: ownerName,
-                    ownerImage: ownerImage,
-                  );
-                },
-                tooltip: 'Chat with Owner',
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+          decoration: BoxDecoration(
+            color: colors.background,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: isProjectFrozen
+                  ? colors.red.withOpacity(0.5)
+                  : colors.button,
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
             ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // === project card ===
+                SavedProjectCard(
+                  title: project.title,
+                  subtitle: project.description,
+                  progress: progress,
+                  imageUrl: project.images.isNotEmpty
+                      ? project.images.first
+                      : '',
+                  showBookmarkIcon: false,
+                ),
+
+                // === owner info section ===
+                _buildOwnerInfoRow(context, colors, ownerName, ownerImage),
+
+                Divider(height: 1.5, color: colors.button),
+
+                // === Action Buttons ===
+                _buildActionButtons(context, colors, isUserBlocked),
+              ],
+            ),
           ),
         );
       },
     );
   }
 
+  Widget _buildOwnerInfoRow(
+    BuildContext context,
+    AppColorScheme colors,
+    String name,
+    String image,
+  ) {
+    if (project.ownerId == null || project.ownerId!.isEmpty) {
+      return const SizedBox();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 16,
+            backgroundImage: (image.isNotEmpty) ? NetworkImage(image) : null,
+            backgroundColor: colors.primary.withOpacity(0.1),
+            child: (image.isEmpty)
+                ? Icon(Icons.person, size: 16, color: colors.primary)
+                : null,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              name,
+              style: AppTextStyles.size14weight5(colors.text),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.chat_bubble_outline,
+              color: colors.primary,
+              size: 20,
+            ),
+            onPressed: () {
+              controller.contactOwner(
+                context,
+                project: project,
+                ownerName: name,
+                ownerImage: image,
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildActionButtons(
     BuildContext context,
     AppColorScheme colors,
-    ProjectsManagerController controller,
+    bool isOwnerBlocked,
   ) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          // === project freez button ===
+          // === Freeze Project ===
           _AdminActionButton(
             icon: isProjectFrozen ? Icons.lock_open : Icons.lock_outline,
             label: isProjectFrozen ? "Unfreeze" : "Freeze",
@@ -169,23 +177,21 @@ class AdminProjectCard extends StatelessWidget {
             },
           ),
 
-          // === owner info button ===
+          // === Info ===
           _AdminActionButton(
             icon: Icons.info_outline,
             label: "Info",
             color: colors.primary,
-            onTap: () {
-              controller.showOwnerInfo(context, project);
-            },
+            onTap: () => controller.showOwnerInfo(context, project),
           ),
 
-          // === block user button ===
+          // === Block User ===
           _AdminActionButton(
-            icon: isOwnerFrozen
+            icon: isOwnerBlocked
                 ? Icons.person_add_alt_1
                 : Icons.person_off_outlined,
-            label: isOwnerFrozen ? "Unblock" : "Block Usr",
-            color: isOwnerFrozen ? Colors.green : Colors.red,
+            label: isOwnerBlocked ? "Unblock" : "Block Usr",
+            color: isOwnerBlocked ? Colors.green : Colors.red,
             onTap: () {
               controller.toggleOwnerBlock(context, project);
             },
