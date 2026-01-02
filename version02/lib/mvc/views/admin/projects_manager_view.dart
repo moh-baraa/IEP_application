@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:iep_app/mvc/views/admin/widgets/admin_project_card.dart';
 import 'package:iep_app/mvc/views/layout/un_found_page.dart';
@@ -19,12 +18,12 @@ class ProjectsManagerView extends StatefulWidget {
 class _ProjectsManagerViewState extends State<ProjectsManagerView> {
   late final ProjectsController projectController; // user projects controller
   late final ProjectsManagerController
-  adminController; // admin manager controller
+  managerController; // admin manager controller
   @override
   void initState() {
     super.initState();
     projectController = ProjectsController();
-    adminController = ProjectsManagerController();
+    managerController = ProjectsManagerController();
     // === create controller, excute fetchProjects, return the controller ===
     projectController.fetchProjects('All', includeFrozen: true);
   }
@@ -32,7 +31,7 @@ class _ProjectsManagerViewState extends State<ProjectsManagerView> {
   @override
   void dispose() {
     projectController.dispose();
-    adminController.dispose();
+    managerController.dispose();
     super.dispose();
   }
 
@@ -47,7 +46,7 @@ class _ProjectsManagerViewState extends State<ProjectsManagerView> {
             // === use to listenable, to update the interface when: ===
             // === 1. the project is freezed ===
             // === 2. the user is blocked ===
-            listenable: Listenable.merge([projectController, adminController]),
+            listenable: projectController,
             builder: (context, _) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,7 +65,7 @@ class _ProjectsManagerViewState extends State<ProjectsManagerView> {
                     child: _buildList(
                       context,
                       projectController,
-                      adminController,
+                      managerController,
                     ),
                   ),
                 ],
@@ -81,7 +80,7 @@ class _ProjectsManagerViewState extends State<ProjectsManagerView> {
   Widget _buildList(
     BuildContext context,
     ProjectsController projectController,
-    ProjectsManagerController adminController,
+    ProjectsManagerController managerController,
   ) {
     // === is loading phase ===
     if (projectController.isLoading) {
@@ -106,31 +105,11 @@ class _ProjectsManagerViewState extends State<ProjectsManagerView> {
         final project = projectController.displayedProjects[index];
 
         // === project card ===
-        return StreamBuilder<DocumentSnapshot>(
-          // listen to the users
-          stream: FirebaseFirestore.instance
-              .collection('users')
-              .doc(project.ownerId)
-              .snapshots(),
-          builder: (context, snapshot) {
-            bool isUserBlocked = false;
-
-            // === check about the data ===
-            if (snapshot.hasData && snapshot.data!.exists) {
-              final data = snapshot.data!.data() as Map<String, dynamic>?;
-              isUserBlocked =
-                  data?['isBlocked'] ?? false; // if non exist, will be false
-            }
-
-            // === project card ===
-            return AdminProjectCard(
-              project: project,
-              controller: adminController,
-              projController: projectController,
-              isProjectFrozen: project.isFrozen,
-              isOwnerFrozen: isUserBlocked,
-            );
-          },
+        return AdminProjectCard(
+          project: project,
+          controller: managerController,
+          projController: projectController,
+          isProjectFrozen: project.isFrozen,
         );
       },
     );
