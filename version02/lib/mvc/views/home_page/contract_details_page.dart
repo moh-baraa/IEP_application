@@ -56,18 +56,17 @@ class ContractDetailsPage extends StatelessWidget {
                 "${contract.totalDonatedAmount} JD",
               ),
 
-              const SizedBox(height: 25), // مسافة
-              // ==========================================
-              // ✅ 1. الحسابات الداخلية للعرض (Math Logic)
-              // ==========================================
+              const SizedBox(height: 25),
+              // === math logic ===
               Builder(
                 builder: (context) {
-                  // المجموع الكلي
+                  // === total amount ===
                   double totalRaised =
                       contract.totalInvestedAmount +
                       contract.totalDonatedAmount;
 
-                  // حصة صاحب المشروع (التبرعات + نصف الاستثمار)
+                  // === owner share from the project ===
+                  // === 50% of investment + 100% of donation ===
                   double ownerShareValue =
                       contract.totalDonatedAmount +
                       (contract.totalInvestedAmount * 0.5);
@@ -75,7 +74,8 @@ class ContractDetailsPage extends StatelessWidget {
                       ? (ownerShareValue / totalRaised) * 100
                       : 0.0;
 
-                  // حصة المستثمرين (نصف الاستثمار فقط)
+                  // === investors share ===
+                  // === 50% of investment ===
                   double investorsShareValue =
                       contract.totalInvestedAmount * 0.5;
                   double investorsSharePercent = (totalRaised > 0)
@@ -84,7 +84,7 @@ class ContractDetailsPage extends StatelessWidget {
 
                   return Column(
                     children: [
-                      // عرض المجموع الكلي
+                      // === show the total ===
                       _buildInfoRow(
                         "Total Raised Capital",
                         "${totalRaised.toStringAsFixed(1)} JD",
@@ -92,7 +92,7 @@ class ContractDetailsPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
 
-                      // جدول التوزيع التفصيلي
+                      // === table show how much the share for every part ===
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey.shade300),
@@ -100,7 +100,7 @@ class ContractDetailsPage extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
-                            // === ترويسة الجدول ===
+                            // === table heads ===
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
@@ -139,7 +139,7 @@ class ContractDetailsPage extends StatelessWidget {
                               ),
                             ),
 
-                            // === صف صاحب المشروع ===
+                            // === owner row ===
                             Padding(
                               padding: const EdgeInsets.all(12),
                               child: Row(
@@ -187,7 +187,7 @@ class ContractDetailsPage extends StatelessWidget {
 
                             const Divider(height: 1),
 
-                            // === صف المستثمرين ===
+                            // === investors row ===
                             Padding(
                               padding: const EdgeInsets.all(12),
                               child: Row(
@@ -242,10 +242,7 @@ class ContractDetailsPage extends StatelessWidget {
 
               const SizedBox(height: 25),
 
-              // ==========================================
-              // ✅ نهاية التعديل
-              // ==========================================
-              const SizedBox(height: 25), // مسافة قبل الشروط
+              const SizedBox(height: 25),
               // === contract details ===
               Text(
                 "Terms & Conditions:",
@@ -259,7 +256,7 @@ class ContractDetailsPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   color: colors.background,
                 ),
-                // ✅ هنا استخدمنا الويدجت الخاصة بنا لعرض النص العريض
+                // === widget to manupulate the text style in the rules ===
                 child: ContractTextRenderer(
                   text: contract.termsAndConditions,
                   baseStyle: AppTextStyles.size14weight4(
@@ -284,7 +281,7 @@ class ContractDetailsPage extends StatelessWidget {
                   2: FlexColumnWidth(1),
                 },
                 children: [
-                  // Header
+                  // === Header ===
                   TableRow(
                     decoration: BoxDecoration(color: colors.container),
                     children: [
@@ -311,7 +308,7 @@ class ContractDetailsPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  // Data
+                  // === Data ===
                   ...contract.investors.map((inv) {
                     return TableRow(
                       children: [
@@ -375,9 +372,7 @@ class ContractDetailsPage extends StatelessWidget {
   }
 }
 
-// ==========================================
-// ✅ الويدجت السحرية لتحويل الرموز ** لنص عريض
-// ==========================================
+// === using ** to make the titles bold ===
 class ContractTextRenderer extends StatelessWidget {
   final String text;
   final TextStyle? baseStyle;
@@ -386,15 +381,17 @@ class ContractTextRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> parts = text.split('**');
+    List<String> parts = text.split('**'); // split the code to titles and text
 
     return RichText(
       text: TextSpan(
         style: baseStyle ?? const TextStyle(color: Colors.black, fontSize: 14),
         children: List.generate(parts.length, (index) {
           if (index % 2 == 0) {
+            // always the even indeces are normal text
             return TextSpan(text: parts[index]);
           } else {
+            // always the odd indeces are titles
             return TextSpan(
               text: parts[index],
               style: const TextStyle(fontWeight: FontWeight.bold),
