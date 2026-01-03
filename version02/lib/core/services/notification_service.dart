@@ -64,6 +64,14 @@ class NotificationService {
         .snapshots();
   }
 
+  // === to get admin notification ===
+  static Stream<QuerySnapshot> getAdminNotifications() {
+    return _firestore
+        .collection('admin_notifications')
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+  }
+
   // === to calc unread messages ===
   static Stream<QuerySnapshot> getUnreadCount() {
     final uid = _auth.currentUser?.uid;
@@ -76,10 +84,26 @@ class NotificationService {
         .snapshots();
   }
 
+  // === to calc unread messages ===
+  static Stream<QuerySnapshot> getAdminUnreadCount() {
+    return FirebaseFirestore.instance
+        .collection('admin_notifications')
+        .where('isRead', isEqualTo: false) // only unread notifications
+        .snapshots();
+  }
+
   // === update to become read ===
   static Future<void> markAsRead(String notificationId) async {
     await _firestore.collection('notifications').doc(notificationId).update({
       'unread': false,
     });
+  }
+
+  // === update to become read ===
+  static Future<void> markItAsRead(String notificationId) async {
+    await FirebaseFirestore.instance
+        .collection('admin_notifications')
+        .doc(notificationId)
+        .update({'isRead': true});
   }
 }
