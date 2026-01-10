@@ -1,0 +1,1610 @@
+@startuml
+!pragma layout smetana
+set namespaceSeparator ::
+
+abstract class "iep_app::core::constans::colors.dart::AppColorScheme" {
+  +Color primary
+  +Color background
+  +Color secondary
+  +Color text
+  +Color secText
+  +Color secTextShapes
+  +Color red
+  +Color blue
+  +Color green
+  +Color orange
+  +Color button
+  +Color container
+  +Color bg
+}
+
+"iep_app::core::constans::colors.dart::AppColorScheme" o-- "dart::ui::Color"
+
+class "iep_app::core::constans::colors.dart::LightColorScheme" {
+  +Color primary
+  +Color background
+  +Color secondary
+  +Color text
+  +Color secText
+  +Color secTextShapes
+  +Color red
+  +Color blue
+  +Color green
+  +Color orange
+  +Color button
+  +Color container
+  +Color bg
+}
+
+"iep_app::core::constans::colors.dart::LightColorScheme" o-- "dart::ui::Color"
+"iep_app::core::constans::colors.dart::AppColorScheme" <|-- "iep_app::core::constans::colors.dart::LightColorScheme"
+
+class "iep_app::core::constans::colors.dart::AppColors" {
+  {static} +AppColorScheme light
+}
+
+"iep_app::core::constans::colors.dart::AppColors" o-- "iep_app::core::constans::colors.dart::AppColorScheme"
+
+class "iep_app::core::constans::fonts.dart::AppTextStyles" {
+  {static} +TextStyle size26weight5()
+  {static} +TextStyle size20weight6()
+  {static} +TextStyle size18weight5()
+  {static} +TextStyle size16weight6()
+  {static} +TextStyle size16weight5()
+  {static} +TextStyle size16weight4()
+  {static} +TextStyle size14weight5()
+  {static} +TextStyle size14weight4()
+  {static} +TextStyle size13weight4()
+  {static} +TextStyle size12weight4()
+  {static} +TextStyle size11weight4()
+  {static} +TextStyle size10weight4()
+}
+
+class "iep_app::core::services::email_support.dart::EmailSupport" {
+  +String emailAddress
+  +dynamic openEmailApp()
+}
+
+class "iep_app::core::services::encryption_service.dart::EncryptionService" {
+  {static} -Key _key
+  {static} -IV _iv
+  {static} -Encrypter _encrypter
+  {static} +String encryptData()
+  {static} +String decryptData()
+}
+
+"iep_app::core::services::encryption_service.dart::EncryptionService" o-- "encrypt::encrypt.dart::Key"
+"iep_app::core::services::encryption_service.dart::EncryptionService" o-- "encrypt::encrypt.dart::IV"
+"iep_app::core::services::encryption_service.dart::EncryptionService" o-- "encrypt::encrypt.dart::Encrypter"
+
+class "iep_app::core::services::mock_payment_service.dart::MockPaymentService" {
+  +dynamic makePayment()
+}
+
+class "iep_app::core::services::notification_service.dart::NotificationService" {
+  {static} -FirebaseFirestore _firestore
+  {static} -FirebaseAuth _auth
+  {static} +dynamic sendNotification()
+  {static} +dynamic sendAdminNotification()
+  {static} +Stream<QuerySnapshot<Object?>> getUserNotifications()
+  {static} +Stream<QuerySnapshot<Object?>> getUnreadCount()
+  {static} +dynamic markAsRead()
+}
+
+"iep_app::core::services::notification_service.dart::NotificationService" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+"iep_app::core::services::notification_service.dart::NotificationService" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+
+class "iep_app::core::widgets::app_input_dialog.dart::AppInputDialog" {
+  +String title
+  +String subtitle
+  +String hintText
+  +String actionText
+  +Color? actionColor
+  +dynamic Function(String) onSubmit
+  {static} +dynamic show()
+  +State<AppInputDialog> createState()
+}
+
+"iep_app::core::widgets::app_input_dialog.dart::AppInputDialog" o-- "dart::ui::Color"
+"iep_app::core::widgets::app_input_dialog.dart::AppInputDialog" o-- "null::dynamic Function(String)"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "iep_app::core::widgets::app_input_dialog.dart::AppInputDialog"
+
+class "iep_app::core::widgets::app_input_dialog.dart::_AppInputDialogState" {
+  -TextEditingController _textController
+  +AppColorScheme colors
+  +void dispose()
+  +Widget build()
+}
+
+"iep_app::core::widgets::app_input_dialog.dart::_AppInputDialogState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"iep_app::core::widgets::app_input_dialog.dart::_AppInputDialogState" o-- "iep_app::core::constans::colors.dart::AppColorScheme"
+"flutter::src::widgets::framework.dart::State" <|-- "iep_app::core::widgets::app_input_dialog.dart::_AppInputDialogState"
+
+class "iep_app::core::widgets::snack_bar_state.dart::AppSnackBarState" {
+  {static} +void show()
+}
+
+class "iep_app::firebase_options.dart::DefaultFirebaseOptions" {
+  {static} +FirebaseOptions web
+  {static} +FirebaseOptions android
+  {static} +FirebaseOptions ios
+  {static} +FirebaseOptions macos
+  {static} +FirebaseOptions windows
+  {static} +FirebaseOptions currentPlatform
+}
+
+"iep_app::firebase_options.dart::DefaultFirebaseOptions" o-- "firebase_core_platform_interface::firebase_core_platform_interface.dart::FirebaseOptions"
+
+class "iep_app::main.dart::Main" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::main.dart::Main"
+
+class "iep_app::mvc::controllers::account_page::account_controller.dart::AccountController" {
+  -AuthRepository _repo
+  -UserRepository _userRepo
+  +TextEditingController nameController
+  +TextEditingController phoneController
+  +TextEditingController emailController
+  +bool isNameReadOnly
+  +bool isPhoneReadOnly
+  +bool isEmailReadOnly
+  +bool showSaveBar
+  +bool isLoading
+  +bool isForgetPassLoading
+  +File? localImageFile
+  -ImagePicker _picker
+  +void initData()
+  +void toggleEdit()
+  +dynamic pickImage()
+  +void cancelChanges()
+  +dynamic saveChanges()
+  +dynamic forgetPassword()
+  +dynamic signOut()
+  +void updateControllersIfReadOnly()
+  +void dispose()
+}
+
+"iep_app::mvc::controllers::account_page::account_controller.dart::AccountController" o-- "iep_app::mvc::repositories::auth_repository.dart::AuthRepository"
+"iep_app::mvc::controllers::account_page::account_controller.dart::AccountController" o-- "iep_app::mvc::repositories::user_repository.dart::UserRepository"
+"iep_app::mvc::controllers::account_page::account_controller.dart::AccountController" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"iep_app::mvc::controllers::account_page::account_controller.dart::AccountController" o-- "dart::io::File"
+"iep_app::mvc::controllers::account_page::account_controller.dart::AccountController" o-- "image_picker::image_picker.dart::ImagePicker"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "iep_app::mvc::controllers::account_page::account_controller.dart::AccountController"
+
+class "iep_app::mvc::controllers::admin::admin_reports_controller.dart::AdminReportsController" {
+  -AdminRepository _repository
+  +Stream<QuerySnapshot<Object?>> getReportsStream()
+  +void showResolveDialog()
+  -dynamic _confirmResolve()
+}
+
+"iep_app::mvc::controllers::admin::admin_reports_controller.dart::AdminReportsController" o-- "iep_app::mvc::repositories::admin_repository.dart::AdminRepository"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "iep_app::mvc::controllers::admin::admin_reports_controller.dart::AdminReportsController"
+
+class "iep_app::mvc::controllers::admin::manage_users_controller.dart::ManageUsersController" {
+  -AdminRepository _repository
+  +bool isLoading
+  -List<QueryDocumentSnapshot<Object?>> _allUsers
+  +List<QueryDocumentSnapshot<Object?>> displayedUsers
+  +String selectedCategory
+  +dynamic fetchUsers()
+  +void filterUsers()
+  +dynamic toggleBlockUser()
+  +void chatWithUser()
+}
+
+"iep_app::mvc::controllers::admin::manage_users_controller.dart::ManageUsersController" o-- "iep_app::mvc::repositories::admin_repository.dart::AdminRepository"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "iep_app::mvc::controllers::admin::manage_users_controller.dart::ManageUsersController"
+
+class "iep_app::mvc::controllers::admin::projects_manager_controller.dart::ProjectsManagerController" {
+  -FirebaseFirestore _firestore
+  +String currentUserId
+  +List<ProjectModel> allProjects
+  +List<ProjectModel> displayedProjects
+  +bool isLoading
+  +dynamic fetchProjects()
+  +void filterProjects()
+  +void contactOwner()
+  +dynamic toggleProjectFreeze()
+  +void showOwnerInfo()
+  +dynamic toggleOwnerBlock()
+}
+
+"iep_app::mvc::controllers::admin::projects_manager_controller.dart::ProjectsManagerController" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "iep_app::mvc::controllers::admin::projects_manager_controller.dart::ProjectsManagerController"
+
+class "iep_app::mvc::controllers::auth::login_controller.dart::LoginController" {
+  +TextEditingController emailController
+  +TextEditingController passwordController
+  -AuthRepository _repository
+  +bool isLoading
+  +String? validateEmail()
+  +String? validatePassword()
+  +dynamic login()
+  +dynamic forgetPassword()
+  +void onCreateAccountEmailTap()
+  +void dispose()
+}
+
+"iep_app::mvc::controllers::auth::login_controller.dart::LoginController" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"iep_app::mvc::controllers::auth::login_controller.dart::LoginController" o-- "iep_app::mvc::repositories::auth_repository.dart::AuthRepository"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "iep_app::mvc::controllers::auth::login_controller.dart::LoginController"
+
+class "iep_app::mvc::controllers::auth::sign_up_controller.dart::SignupController" {
+  -AuthRepository _repository
+  -UserRepository _userRepository
+  +UserProvider provider
+  +TextEditingController firstNameController
+  +TextEditingController lastNameController
+  +TextEditingController emailController
+  +TextEditingController mobileController
+  +TextEditingController yearController
+  +TextEditingController monthController
+  +TextEditingController dayController
+  +TextEditingController passwordController
+  +TextEditingController confirmPasswordController
+  +bool isLoading
+  +bool isEmailSent
+  +bool canResendEmail
+  +String? validateFirstName()
+  +String? validateLastName()
+  +String? validateEmail()
+  +String? validateMobil()
+  +String? validateYear()
+  +String? validateMonth()
+  +String? validateDay()
+  +String? validatePassword()
+  +String? validateConfirmPassword()
+  +dynamic signUp()
+  +void onHaveAccountTap()
+  +dynamic checkEmailVerified()
+  +dynamic sendVerificationEmail()
+  +void dispose()
+}
+
+"iep_app::mvc::controllers::auth::sign_up_controller.dart::SignupController" o-- "iep_app::mvc::repositories::auth_repository.dart::AuthRepository"
+"iep_app::mvc::controllers::auth::sign_up_controller.dart::SignupController" o-- "iep_app::mvc::repositories::user_repository.dart::UserRepository"
+"iep_app::mvc::controllers::auth::sign_up_controller.dart::SignupController" o-- "iep_app::mvc::providers::user_provider.dart::UserProvider"
+"iep_app::mvc::controllers::auth::sign_up_controller.dart::SignupController" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "iep_app::mvc::controllers::auth::sign_up_controller.dart::SignupController"
+
+class "iep_app::mvc::controllers::chat_page::chat_controller.dart::ChatController" {
+  -FirebaseFirestore _firestore
+  -FirebaseAuth _auth
+  +dynamic sendMessage()
+  +dynamic onChatListTap()
+  +Stream<DocumentSnapshot<Object?>> getUserStream()
+  +Stream<QuerySnapshot<Object?>> getChatRooms()
+  +dynamic onReportTap()
+  +Stream<QuerySnapshot<Object?>> getMessages()
+}
+
+"iep_app::mvc::controllers::chat_page::chat_controller.dart::ChatController" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+"iep_app::mvc::controllers::chat_page::chat_controller.dart::ChatController" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+
+class "iep_app::mvc::controllers::home_page::contract_generator_controller.dart::ContractGeneratorController" {
+  -ContractRepository _contractRepo
+  -FirebaseFirestore _firestore
+  -UserRepository _userRepo
+  +dynamic generateAndSaveContract()
+  -String _generateLegalText()
+}
+
+"iep_app::mvc::controllers::home_page::contract_generator_controller.dart::ContractGeneratorController" o-- "iep_app::mvc::repositories::contract_repository.dart::ContractRepository"
+"iep_app::mvc::controllers::home_page::contract_generator_controller.dart::ContractGeneratorController" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+"iep_app::mvc::controllers::home_page::contract_generator_controller.dart::ContractGeneratorController" o-- "iep_app::mvc::repositories::user_repository.dart::UserRepository"
+
+class "iep_app::mvc::controllers::home_page::home_controller.dart::HomeController" {
+  +void navigateToAddProject()
+  +void onMyInvestmentsTap()
+  +void onMyContractsTap()
+  +void onMyProjectsTap()
+}
+
+class "iep_app::mvc::controllers::home_page::saved_projects_controller.dart::SavedProjectsController" {
+  -SavedProjectsRepository _repository
+  +bool isLoading
+  +List<ProjectModel> savedProjects
+  -bool _isDisposed
+  +void dispose()
+  +dynamic fetchSavedProjects()
+  +void onProjectTap()
+  +dynamic removeProject()
+  +void onCardTap()
+}
+
+"iep_app::mvc::controllers::home_page::saved_projects_controller.dart::SavedProjectsController" o-- "iep_app::mvc::repositories::saved_projects_repository.dart::SavedProjectsRepository"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "iep_app::mvc::controllers::home_page::saved_projects_controller.dart::SavedProjectsController"
+
+class "iep_app::mvc::controllers::on_boarding::on_boarding_controller.dart::OnBoardingController" {
+  +void onSkipTap()
+  +void onGetStartedTap()
+  +void onNextTap()
+  +void onLoginTap()
+  +void onSignUpTap()
+}
+
+class "iep_app::mvc::controllers::payment::add_card_controller.dart::AddCardController" {
+  +TextEditingController holderNameController
+  +TextEditingController cardNumberController
+  +TextEditingController expiryController
+  +TextEditingController cvvController
+  +ValueNotifier<bool> isLoading
+  -CardsRepository _cardsRepo
+  +AppColorScheme colors
+  +UserProvider provider
+  +dynamic saveCard()
+  +String detectCardType()
+  +String? cardNumberValidator()
+  +String? expiryValidator()
+  +String? ccvValidator()
+  +String? holderNameValidator()
+  +void dispose()
+}
+
+"iep_app::mvc::controllers::payment::add_card_controller.dart::AddCardController" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"iep_app::mvc::controllers::payment::add_card_controller.dart::AddCardController" o-- "flutter::src::foundation::change_notifier.dart::ValueNotifier<bool>"
+"iep_app::mvc::controllers::payment::add_card_controller.dart::AddCardController" o-- "iep_app::mvc::repositories::cards_repository.dart::CardsRepository"
+"iep_app::mvc::controllers::payment::add_card_controller.dart::AddCardController" o-- "iep_app::core::constans::colors.dart::AppColorScheme"
+"iep_app::mvc::controllers::payment::add_card_controller.dart::AddCardController" o-- "iep_app::mvc::providers::user_provider.dart::UserProvider"
+
+class "iep_app::mvc::controllers::payment::payment_controller.dart::PaymentController" {
+  -MockPaymentService _paymentService
+  -TransactionRepository _transactionRepo
+  -PaymentRepository _paymentRepo
+  +ContractGeneratorController generator
+  +bool isLoading
+  +dynamic processPayment()
+}
+
+"iep_app::mvc::controllers::payment::payment_controller.dart::PaymentController" o-- "iep_app::core::services::mock_payment_service.dart::MockPaymentService"
+"iep_app::mvc::controllers::payment::payment_controller.dart::PaymentController" o-- "iep_app::mvc::repositories::transaction_repository.dart::TransactionRepository"
+"iep_app::mvc::controllers::payment::payment_controller.dart::PaymentController" o-- "iep_app::mvc::repositories::payment_repository.dart::PaymentRepository"
+"iep_app::mvc::controllers::payment::payment_controller.dart::PaymentController" o-- "iep_app::mvc::controllers::home_page::contract_generator_controller.dart::ContractGeneratorController"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "iep_app::mvc::controllers::payment::payment_controller.dart::PaymentController"
+
+class "iep_app::mvc::controllers::project_page::add_project_controller.dart::AddProjectController" {
+  -ProjectsRepository _repo
+  +TextEditingController titleController
+  +TextEditingController descriptionController
+  +TextEditingController amountController
+  -ImagePicker _picker
+  +bool isEditMode
+  +String? existingProjectId
+  +ValueNotifier<List<dynamic>> displayImages
+  +List<String> keptOldImages
+  +ValueNotifier<bool> isLoading
+  +void initializeForEdit()
+  +int wordCount()
+  +dynamic pickImages()
+  +void removeImage()
+  +dynamic submit()
+  +String? validateTitle()
+  +String? validateDescription()
+  +String? validateAmount()
+  +void dispose()
+}
+
+"iep_app::mvc::controllers::project_page::add_project_controller.dart::AddProjectController" o-- "iep_app::mvc::repositories::project_repository.dart::ProjectsRepository"
+"iep_app::mvc::controllers::project_page::add_project_controller.dart::AddProjectController" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"iep_app::mvc::controllers::project_page::add_project_controller.dart::AddProjectController" o-- "image_picker::image_picker.dart::ImagePicker"
+"iep_app::mvc::controllers::project_page::add_project_controller.dart::AddProjectController" o-- "flutter::src::foundation::change_notifier.dart::ValueNotifier<List<dynamic>>"
+"iep_app::mvc::controllers::project_page::add_project_controller.dart::AddProjectController" o-- "flutter::src::foundation::change_notifier.dart::ValueNotifier<bool>"
+
+class "iep_app::mvc::controllers::project_page::projects_datails_controllre.dart::ProjectDetailsController" {
+  -ProjectDetailsRepository _repository
+  +ProjectModel project
+  +String userId
+  +TextEditingController commentController
+  +int upvoteCount
+  +bool isUpVoted
+  +double liveTotalFunds
+  +int liveInvestorsCount
+  -StreamSubscription<DocumentSnapshot<Object?>>? _projectSubscription
+  +double currentRating
+  +double userRating
+  +bool isSaved
+  +bool isCommentLoading
+  +String ownerName
+  +String ownerImage
+  +bool isOwnerLoading
+  -void _initData()
+  -void _startProjectStream()
+  -dynamic _checkIfUpvoted()
+  +dynamic toggleUpvote()
+  -dynamic _checkIfSaved()
+  +dynamic toggleSave()
+  +dynamic sendReport()
+  -dynamic _fetchOwnerDetails()
+  +void contactOwner()
+  +void dispose()
+  +void updateUserRating()
+  +dynamic addComment()
+  +dynamic rateProject()
+  +dynamic sendUserReport()
+  +dynamic deleteProject()
+}
+
+"iep_app::mvc::controllers::project_page::projects_datails_controllre.dart::ProjectDetailsController" o-- "iep_app::mvc::repositories::project_details.repositories.dart::ProjectDetailsRepository"
+"iep_app::mvc::controllers::project_page::projects_datails_controllre.dart::ProjectDetailsController" o-- "iep_app::mvc::models::project_model.dart::ProjectModel"
+"iep_app::mvc::controllers::project_page::projects_datails_controllre.dart::ProjectDetailsController" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"iep_app::mvc::controllers::project_page::projects_datails_controllre.dart::ProjectDetailsController" o-- "dart::async::StreamSubscription<DocumentSnapshot<Object>>"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "iep_app::mvc::controllers::project_page::projects_datails_controllre.dart::ProjectDetailsController"
+
+class "iep_app::mvc::controllers::project_page::project_controller.dart::ProjectsController" {
+  -ProjectsRepository _repository
+  +bool isLoading
+  +List<ProjectModel> allProjects
+  +List<ProjectModel> displayedProjects
+  +String? errorMessage
+  +String selectedFilter
+  -String _currentSearchQuery
+  -StreamSubscription<dynamic>? _projectsSubscription
+  -bool _isDisposed
+  +void fetchProjects()
+  +void filterProjects()
+  +dynamic fetchAndNavigateToProject()
+  +void dispose()
+}
+
+"iep_app::mvc::controllers::project_page::project_controller.dart::ProjectsController" o-- "iep_app::mvc::repositories::project_repository.dart::ProjectsRepository"
+"iep_app::mvc::controllers::project_page::project_controller.dart::ProjectsController" o-- "dart::async::StreamSubscription<dynamic>"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "iep_app::mvc::controllers::project_page::project_controller.dart::ProjectsController"
+
+class "iep_app::mvc::models::comment_model.dart::CommentModel" {
+  +String id
+  +String authorId
+  +String content
+  +DateTime createdAt
+  +Map<String, dynamic> toMap()
+}
+
+class "iep_app::mvc::models::contract_investor.dart::ContractInvestor" {
+  +String userId
+  +String name
+  +double amount
+  +double equityPercentage
+  +Map<String, dynamic> toMap()
+}
+
+class "iep_app::mvc::models::contract_model.dart::ContractModel" {
+  +String id
+  +String projectId
+  +String projectTitle
+  +String ownerId
+  +String ownerName
+  +double totalInvestedAmount
+  +double totalDonatedAmount
+  +DateTime createdAt
+  +List<ContractInvestor> investors
+  +List<String> participantsIds
+  +String termsAndConditions
+  +Map<String, dynamic> toMap()
+}
+
+class "iep_app::mvc::models::credit_card_model.dart::CreditCardModel" {
+  +String id
+  +String userId
+  +String holderName
+  +String expiryDate
+  +String cardType
+  +String last4Digits
+  +String encryptedNumber
+  +String encryptedCvv
+  +Map<String, dynamic> toMap()
+  {static} +CreditCardModel createNew()
+}
+
+class "iep_app::mvc::models::notification_mode.dart::NotificationModel" {
+  +String? id
+  +String title
+  +String subtitle
+  +Timestamp time
+  +bool unread
+  +String receiverId
+  +String? type
+  +Map<String, dynamic> adminToMap()
+  +Map<String, dynamic> toMap()
+}
+
+"iep_app::mvc::models::notification_mode.dart::NotificationModel" o-- "cloud_firestore_platform_interface::src::timestamp.dart::Timestamp"
+
+class "iep_app::mvc::models::project_model.dart::ProjectModel" {
+  +String? id
+  +String? ownerId
+  +List<String> images
+  +double targetFunds
+  +double totalFunds
+  +int? numOfReviews
+  +double? rating
+  +String title
+  +String description
+  +DateTime? date
+  +List<CommentModel>? comments
+  +String? bankAccount
+  +int? upVote
+  +bool isApproved
+  +bool isFrozen
+  +int? investors_count
+  +bool? isSatisfiesTarget
+  +Map<String, dynamic> toMap()
+  +ProjectModel copyWith()
+}
+
+class "iep_app::mvc::models::transaction_model.dart::TransactionModel" {
+  +String id
+  +String userId
+  +String userName
+  +String projectId
+  +String projectTitle
+  +double amount
+  +TransactionType type
+  +DateTime timestamp
+  +String paymentMethodId
+  +String status
+  +Map<String, dynamic> toMap()
+}
+
+"iep_app::mvc::models::transaction_model.dart::TransactionModel" o-- "iep_app::mvc::models::transaction_model.dart::TransactionType"
+
+class "iep_app::mvc::models::transaction_model.dart::TransactionType" {
+  +int index
+  {static} +List<TransactionType> values
+  {static} +TransactionType investment
+  {static} +TransactionType donation
+}
+
+"iep_app::mvc::models::transaction_model.dart::TransactionType" o-- "iep_app::mvc::models::transaction_model.dart::TransactionType"
+"dart::core::Enum" <|-- "iep_app::mvc::models::transaction_model.dart::TransactionType"
+
+class "iep_app::mvc::models::user_model.dart::UserModel" {
+  +String id
+  +String email
+  +String firstName
+  +String lastName
+  +String mobile
+  +String? avatarUrl
+  +UserRole role
+  +bool isblocked
+  +Map<String, dynamic> toMap()
+  +UserModel copyWith()
+}
+
+"iep_app::mvc::models::user_model.dart::UserModel" o-- "iep_app::mvc::models::user_model.dart::UserRole"
+
+class "iep_app::mvc::models::user_model.dart::UserRole" {
+  +int index
+  {static} +List<UserRole> values
+  {static} +UserRole user
+  {static} +UserRole admin
+  {static} +UserRole municipality
+}
+
+"iep_app::mvc::models::user_model.dart::UserRole" o-- "iep_app::mvc::models::user_model.dart::UserRole"
+"dart::core::Enum" <|-- "iep_app::mvc::models::user_model.dart::UserRole"
+
+class "iep_app::mvc::providers::user_provider.dart::UserProvider" {
+  {static} -UserProvider? _instance
+  -AuthRepository _repository
+  -User? _user
+  -UserModel? _currentUser
+  -bool _isAuthLoading
+  -int _recentTransactionsCount
+  -int _activeProjectsCount
+  -double _totalInvestedAmount
+  {static} +UserProvider instance
+  +String? currentUserId
+  +User? user
+  +UserModel? currentUser
+  +bool isAuthLoading
+  +bool isBlocked
+  +String firstName
+  +String lastName
+  +String email
+  +String phone
+  +String? avatarUrl
+  +String fullName
+  +bool isAdmin
+  +bool isMunicipality
+  +String transactionsCount
+  +String activeProjectsCount
+  +String investmentsCount
+  +bool isEmailVerified
+  -void _monitorAuthState()
+  -dynamic _fetchUserData()
+  +dynamic fetchUserStatistics()
+  +dynamic refreshStats()
+  -void _clearData()
+  +dynamic reloadUserData()
+  +void updateLocalData()
+  +void updateStats()
+}
+
+"iep_app::mvc::providers::user_provider.dart::UserProvider" o-- "iep_app::mvc::providers::user_provider.dart::UserProvider"
+"iep_app::mvc::providers::user_provider.dart::UserProvider" o-- "iep_app::mvc::repositories::auth_repository.dart::AuthRepository"
+"iep_app::mvc::providers::user_provider.dart::UserProvider" o-- "firebase_auth::firebase_auth.dart::User"
+"iep_app::mvc::providers::user_provider.dart::UserProvider" o-- "iep_app::mvc::models::user_model.dart::UserModel"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "iep_app::mvc::providers::user_provider.dart::UserProvider"
+
+class "iep_app::mvc::repositories::admin_repository.dart::AdminRepository" {
+  -FirebaseFirestore _firestore
+  +dynamic getAllUsers()
+  +dynamic toggleUserBlockState()
+  +dynamic resolveReport()
+  +Stream<QuerySnapshot<Object?>> getProjectRequestsStream()
+  +dynamic approveProject()
+  +dynamic rejectProject()
+  +dynamic getAllProjects()
+}
+
+"iep_app::mvc::repositories::admin_repository.dart::AdminRepository" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+
+class "iep_app::mvc::repositories::auth_repository.dart::AuthRepository" {
+  +AppColorScheme colors
+  -FirebaseAuth _auth
+  -FirebaseFirestore _firestore
+  +dynamic login()
+  +dynamic signUp()
+  +dynamic signOut()
+  +dynamic getUserData()
+  +dynamic isBlocked()
+  +dynamic sendPasswordResetEmail()
+}
+
+"iep_app::mvc::repositories::auth_repository.dart::AuthRepository" o-- "iep_app::core::constans::colors.dart::AppColorScheme"
+"iep_app::mvc::repositories::auth_repository.dart::AuthRepository" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"iep_app::mvc::repositories::auth_repository.dart::AuthRepository" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+
+class "iep_app::mvc::repositories::cards_repository.dart::CardsRepository" {
+  -FirebaseFirestore _firestore
+  +dynamic addCard()
+  +Stream<List<CreditCardModel>> getUserCards()
+  +dynamic deleteCard()
+}
+
+"iep_app::mvc::repositories::cards_repository.dart::CardsRepository" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+
+class "iep_app::mvc::repositories::contract_repository.dart::ContractRepository" {
+  -FirebaseFirestore _firestore
+  +dynamic createContract()
+  +Stream<List<ContractModel>> getUserContracts()
+}
+
+"iep_app::mvc::repositories::contract_repository.dart::ContractRepository" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+
+class "iep_app::mvc::repositories::payment_repository.dart::PaymentRepository" {
+  -FirebaseFirestore _firestore
+  +dynamic runTransaction()
+}
+
+"iep_app::mvc::repositories::payment_repository.dart::PaymentRepository" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+
+class "iep_app::mvc::repositories::project_details.repositories.dart::ProjectDetailsRepository" {
+  -FirebaseFirestore _firestore
+  +dynamic addComment()
+  +dynamic updateRating()
+  +dynamic updateUpvote()
+  +dynamic getUserData()
+  +dynamic hasUserUpvoted()
+  +dynamic toggleUpvote()
+  +dynamic saveProject()
+  +dynamic removeSavedProject()
+  +dynamic isProjectSaved()
+  +dynamic submitReport()
+  +dynamic submitUserReport()
+  +dynamic updateProjectData()
+  +Stream<DocumentSnapshot<Object?>> getProjectStream()
+}
+
+"iep_app::mvc::repositories::project_details.repositories.dart::ProjectDetailsRepository" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+
+class "iep_app::mvc::repositories::project_repository.dart::ProjectsRepository" {
+  -FirebaseFirestore _firestore
+  +Stream<List<ProjectModel>> getProjectsStream()
+  +dynamic getProjectById()
+  +Stream<QuerySnapshot<Object?>>? getUserProjects()
+  +dynamic addImageAndGetUrl()
+  +dynamic updateProject()
+  +dynamic addNewProject()
+}
+
+"iep_app::mvc::repositories::project_repository.dart::ProjectsRepository" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+
+class "iep_app::mvc::repositories::saved_projects_repository.dart::SavedProjectsRepository" {
+  -FirebaseFirestore _firestore
+  -FirebaseAuth _auth
+  +dynamic getSavedProjects()
+  +dynamic deleteSavedProject()
+}
+
+"iep_app::mvc::repositories::saved_projects_repository.dart::SavedProjectsRepository" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+"iep_app::mvc::repositories::saved_projects_repository.dart::SavedProjectsRepository" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+
+class "iep_app::mvc::repositories::transaction_repository.dart::TransactionRepository" {
+  -FirebaseFirestore _firestore
+  +dynamic createTransaction()
+  +Stream<List<TransactionModel>> getUserTransactions()
+}
+
+"iep_app::mvc::repositories::transaction_repository.dart::TransactionRepository" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+
+class "iep_app::mvc::repositories::user_repository.dart::UserRepository" {
+  +dynamic updateUserData()
+  +dynamic addAvatarUrlAndGetUrl()
+  +dynamic getUserName()
+  +dynamic isVerified()
+}
+
+class "iep_app::mvc::views::account_page::account_page.dart::AccountPage" {
+  +State<AccountPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "iep_app::mvc::views::account_page::account_page.dart::AccountPage"
+
+class "iep_app::mvc::views::account_page::account_page.dart::_AccountPageState" {
+  +AccountController controller
+  +UserProvider userProvider
+  +void dispose()
+  +void initState()
+  +Widget build()
+}
+
+"iep_app::mvc::views::account_page::account_page.dart::_AccountPageState" o-- "iep_app::mvc::controllers::account_page::account_controller.dart::AccountController"
+"iep_app::mvc::views::account_page::account_page.dart::_AccountPageState" o-- "iep_app::mvc::providers::user_provider.dart::UserProvider"
+"flutter::src::widgets::framework.dart::State" <|-- "iep_app::mvc::views::account_page::account_page.dart::_AccountPageState"
+
+class "iep_app::mvc::views::account_page::widgets::editable_feild.dart::AppEditableFeild" {
+  +String label
+  +String hint
+  +TextEditingController controller
+  +bool isReadOnly
+  +void Function() onEditTap
+  +dynamic colors
+  +TextInputType inputType
+  +bool isEmail
+  +Widget build()
+}
+
+"iep_app::mvc::views::account_page::widgets::editable_feild.dart::AppEditableFeild" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"iep_app::mvc::views::account_page::widgets::editable_feild.dart::AppEditableFeild" o-- "dart::ui::void Function()"
+"iep_app::mvc::views::account_page::widgets::editable_feild.dart::AppEditableFeild" o-- "flutter::src::services::text_input.dart::TextInputType"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::account_page::widgets::editable_feild.dart::AppEditableFeild"
+
+class "iep_app::mvc::views::account_page::widgets::save_bar.dart::AppSaveBar" {
+  +BuildContext context
+  +AccountController controller
+  +UserProvider userProvider
+  +Widget build()
+}
+
+"iep_app::mvc::views::account_page::widgets::save_bar.dart::AppSaveBar" o-- "flutter::src::widgets::framework.dart::BuildContext"
+"iep_app::mvc::views::account_page::widgets::save_bar.dart::AppSaveBar" o-- "iep_app::mvc::controllers::account_page::account_controller.dart::AccountController"
+"iep_app::mvc::views::account_page::widgets::save_bar.dart::AppSaveBar" o-- "iep_app::mvc::providers::user_provider.dart::UserProvider"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::account_page::widgets::save_bar.dart::AppSaveBar"
+
+class "iep_app::mvc::views::admin::admin_notifications_page.dart::AdminNotificationsPage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::admin::admin_notifications_page.dart::AdminNotificationsPage"
+
+class "iep_app::mvc::views::admin::admin_view.dart::AdminView" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::admin::admin_view.dart::AdminView"
+
+class "iep_app::mvc::views::admin::projects_manager_view.dart::ProjectsManagerView" {
+  +State<ProjectsManagerView> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "iep_app::mvc::views::admin::projects_manager_view.dart::ProjectsManagerView"
+
+class "iep_app::mvc::views::admin::projects_manager_view.dart::_ProjectsManagerViewState" {
+  +ProjectsController projectController
+  +ProjectsManagerController adminController
+  +void initState()
+  +void dispose()
+  +Widget build()
+  -Widget _buildList()
+}
+
+"iep_app::mvc::views::admin::projects_manager_view.dart::_ProjectsManagerViewState" o-- "iep_app::mvc::controllers::project_page::project_controller.dart::ProjectsController"
+"iep_app::mvc::views::admin::projects_manager_view.dart::_ProjectsManagerViewState" o-- "iep_app::mvc::controllers::admin::projects_manager_controller.dart::ProjectsManagerController"
+"flutter::src::widgets::framework.dart::State" <|-- "iep_app::mvc::views::admin::projects_manager_view.dart::_ProjectsManagerViewState"
+
+class "iep_app::mvc::views::admin::project_requests_page.dart::ProjectRequestsPage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::admin::project_requests_page.dart::ProjectRequestsPage"
+
+class "iep_app::mvc::views::admin::reports_page.dart::AdminReportsPage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::admin::reports_page.dart::AdminReportsPage"
+
+class "iep_app::mvc::views::admin::users_manager_view.dart::ManageUsersPage" {
+  +State<ManageUsersPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "iep_app::mvc::views::admin::users_manager_view.dart::ManageUsersPage"
+
+class "iep_app::mvc::views::admin::users_manager_view.dart::_ManageUsersPageState" {
+  +ManageUsersController controller
+  +void initState()
+  +void dispose()
+  +Widget build()
+}
+
+"iep_app::mvc::views::admin::users_manager_view.dart::_ManageUsersPageState" o-- "iep_app::mvc::controllers::admin::manage_users_controller.dart::ManageUsersController"
+"flutter::src::widgets::framework.dart::State" <|-- "iep_app::mvc::views::admin::users_manager_view.dart::_ManageUsersPageState"
+
+class "iep_app::mvc::views::admin::widgets::admin_dashboard_card.dart::AdminDashboardCard" {
+  +BuildContext context
+  +String title
+  +IconData icon
+  +Color color
+  +String count
+  +void Function() onTap
+  +bool isAlert
+  +Widget build()
+}
+
+"iep_app::mvc::views::admin::widgets::admin_dashboard_card.dart::AdminDashboardCard" o-- "flutter::src::widgets::framework.dart::BuildContext"
+"iep_app::mvc::views::admin::widgets::admin_dashboard_card.dart::AdminDashboardCard" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"iep_app::mvc::views::admin::widgets::admin_dashboard_card.dart::AdminDashboardCard" o-- "dart::ui::Color"
+"iep_app::mvc::views::admin::widgets::admin_dashboard_card.dart::AdminDashboardCard" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::admin::widgets::admin_dashboard_card.dart::AdminDashboardCard"
+
+class "iep_app::mvc::views::admin::widgets::admin_project_card.dart::AdminProjectCard" {
+  +ProjectModel project
+  +ProjectsManagerController controller
+  +ProjectsController projController
+  +bool isProjectFrozen
+  +bool isOwnerFrozen
+  +Widget build()
+  -Widget _buildOwnerSection()
+  -Widget _buildActionButtons()
+}
+
+"iep_app::mvc::views::admin::widgets::admin_project_card.dart::AdminProjectCard" o-- "iep_app::mvc::models::project_model.dart::ProjectModel"
+"iep_app::mvc::views::admin::widgets::admin_project_card.dart::AdminProjectCard" o-- "iep_app::mvc::controllers::admin::projects_manager_controller.dart::ProjectsManagerController"
+"iep_app::mvc::views::admin::widgets::admin_project_card.dart::AdminProjectCard" o-- "iep_app::mvc::controllers::project_page::project_controller.dart::ProjectsController"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::admin::widgets::admin_project_card.dart::AdminProjectCard"
+
+class "iep_app::mvc::views::admin::widgets::admin_project_card.dart::_AdminActionButton" {
+  +IconData icon
+  +String label
+  +Color color
+  +void Function() onTap
+  +Widget build()
+}
+
+"iep_app::mvc::views::admin::widgets::admin_project_card.dart::_AdminActionButton" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"iep_app::mvc::views::admin::widgets::admin_project_card.dart::_AdminActionButton" o-- "dart::ui::Color"
+"iep_app::mvc::views::admin::widgets::admin_project_card.dart::_AdminActionButton" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::admin::widgets::admin_project_card.dart::_AdminActionButton"
+
+class "iep_app::mvc::views::admin::widgets::admin_user_card.dart::AdminUserCard" {
+  +String name
+  +String email
+  +String avatarUrl
+  +String role
+  +bool isBlocked
+  +void Function() onChatTap
+  +void Function() onBlockTap
+  +Widget build()
+  -Color _getRoleColor()
+}
+
+"iep_app::mvc::views::admin::widgets::admin_user_card.dart::AdminUserCard" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::admin::widgets::admin_user_card.dart::AdminUserCard"
+
+class "iep_app::mvc::views::admin::widgets::report_card.dart::ReportCard" {
+  +Map<String, dynamic> data
+  +String reportId
+  +void Function() onResolve
+  +Widget build()
+  -Widget _buildTitleWidget()
+}
+
+"iep_app::mvc::views::admin::widgets::report_card.dart::ReportCard" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::admin::widgets::report_card.dart::ReportCard"
+
+class "iep_app::mvc::views::admin::widgets::request_card.dart::AppRequestCard" {
+  +ProjectModel project
+  +void Function() onApprove
+  +void Function() onReject
+  +Widget build()
+}
+
+"iep_app::mvc::views::admin::widgets::request_card.dart::AppRequestCard" o-- "iep_app::mvc::models::project_model.dart::ProjectModel"
+"iep_app::mvc::views::admin::widgets::request_card.dart::AppRequestCard" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::admin::widgets::request_card.dart::AppRequestCard"
+
+class "iep_app::mvc::views::auth::email_verify.dart::AppVerifyEmailPage" {
+  +State<AppVerifyEmailPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "iep_app::mvc::views::auth::email_verify.dart::AppVerifyEmailPage"
+
+class "iep_app::mvc::views::auth::email_verify.dart::_AppVerifyEmailPageState" {
+  -SignupController _controller
+  +AccountController accController
+  +void initState()
+  +void dispose()
+  +Widget build()
+}
+
+"iep_app::mvc::views::auth::email_verify.dart::_AppVerifyEmailPageState" o-- "iep_app::mvc::controllers::auth::sign_up_controller.dart::SignupController"
+"iep_app::mvc::views::auth::email_verify.dart::_AppVerifyEmailPageState" o-- "iep_app::mvc::controllers::account_page::account_controller.dart::AccountController"
+"flutter::src::widgets::framework.dart::State" <|-- "iep_app::mvc::views::auth::email_verify.dart::_AppVerifyEmailPageState"
+
+class "iep_app::mvc::views::auth::login_page.dart::LoginPage" {
+  +State<LoginPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "iep_app::mvc::views::auth::login_page.dart::LoginPage"
+
+class "iep_app::mvc::views::auth::login_page.dart::_LoginPageState" {
+  -LoginController _controller
+  -GlobalKey<FormState> _formKey
+  +void dispose()
+  +Widget build()
+}
+
+"iep_app::mvc::views::auth::login_page.dart::_LoginPageState" o-- "iep_app::mvc::controllers::auth::login_controller.dart::LoginController"
+"iep_app::mvc::views::auth::login_page.dart::_LoginPageState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"flutter::src::widgets::framework.dart::State" <|-- "iep_app::mvc::views::auth::login_page.dart::_LoginPageState"
+
+class "iep_app::mvc::views::auth::sign_up_page.dart::CreateAccountPage" {
+  +State<CreateAccountPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "iep_app::mvc::views::auth::sign_up_page.dart::CreateAccountPage"
+
+class "iep_app::mvc::views::auth::sign_up_page.dart::_CreateAccountPageState" {
+  -SignupController _controller
+  -GlobalKey<FormState> _formKey
+  +void dispose()
+  +Widget build()
+}
+
+"iep_app::mvc::views::auth::sign_up_page.dart::_CreateAccountPageState" o-- "iep_app::mvc::controllers::auth::sign_up_controller.dart::SignupController"
+"iep_app::mvc::views::auth::sign_up_page.dart::_CreateAccountPageState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"flutter::src::widgets::framework.dart::State" <|-- "iep_app::mvc::views::auth::sign_up_page.dart::_CreateAccountPageState"
+
+class "iep_app::mvc::views::auth::widgets::form_button.dart::AppFormButton" {
+  +String buttonText
+  +void Function()? onPressed
+  +bool isSecondary
+  +bool isloading
+  +Widget build()
+}
+
+"iep_app::mvc::views::auth::widgets::form_button.dart::AppFormButton" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::auth::widgets::form_button.dart::AppFormButton"
+
+class "iep_app::mvc::views::auth::widgets::text_field.dart::AppTextField" {
+  +String textInside
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::auth::widgets::text_field.dart::AppTextField"
+
+class "iep_app::mvc::views::auth::widgets::text_field2.dart::AppTextField2" {
+  +String? Function(String?)? validator
+  +String textInside
+  +TextEditingController controller
+  +bool obscure
+  +Widget build()
+}
+
+"iep_app::mvc::views::auth::widgets::text_field2.dart::AppTextField2" o-- "flutter::src::widgets::form.dart::String Function(String)"
+"iep_app::mvc::views::auth::widgets::text_field2.dart::AppTextField2" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::auth::widgets::text_field2.dart::AppTextField2"
+
+class "iep_app::mvc::views::chat_page::chatDetails_page.dart::ChatDetailsPage" {
+  +String chatName
+  +String avatarUrl
+  +String receiverId
+  +State<ChatDetailsPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "iep_app::mvc::views::chat_page::chatDetails_page.dart::ChatDetailsPage"
+
+class "iep_app::mvc::views::chat_page::chatDetails_page.dart::_ChatDetailsPageState" {
+  -TextEditingController _controller
+  -ChatController _chatController
+  -Stream<QuerySnapshot<Object?>> _messagesStream
+  +void initState()
+  +void dispose()
+  +Widget build()
+  -Widget _defaultAvatar()
+}
+
+"iep_app::mvc::views::chat_page::chatDetails_page.dart::_ChatDetailsPageState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"iep_app::mvc::views::chat_page::chatDetails_page.dart::_ChatDetailsPageState" o-- "iep_app::mvc::controllers::chat_page::chat_controller.dart::ChatController"
+"iep_app::mvc::views::chat_page::chatDetails_page.dart::_ChatDetailsPageState" o-- "dart::async::Stream<QuerySnapshot<Object>>"
+"flutter::src::widgets::framework.dart::State" <|-- "iep_app::mvc::views::chat_page::chatDetails_page.dart::_ChatDetailsPageState"
+
+class "iep_app::mvc::views::chat_page::chat_page.dart::ChatPage" {
+  -ChatController _chatController
+  +Widget build()
+}
+
+"iep_app::mvc::views::chat_page::chat_page.dart::ChatPage" o-- "iep_app::mvc::controllers::chat_page::chat_controller.dart::ChatController"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::chat_page::chat_page.dart::ChatPage"
+
+class "iep_app::mvc::views::chat_page::message_text_input.dart::AppMessageTextInput" {
+  +TextEditingController controller
+  +String receiverId
+  +Widget build()
+}
+
+"iep_app::mvc::views::chat_page::message_text_input.dart::AppMessageTextInput" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::chat_page::message_text_input.dart::AppMessageTextInput"
+
+class "iep_app::mvc::views::chat_page::widgets::chat_item.dart::ChatListItem" {
+  +String avatarUrl
+  +String name
+  +String subtitle
+  +String time
+  +int unreadCount
+  +void Function()? onTap
+  +Widget build()
+}
+
+"iep_app::mvc::views::chat_page::widgets::chat_item.dart::ChatListItem" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::chat_page::widgets::chat_item.dart::ChatListItem"
+
+class "iep_app::mvc::views::chat_page::widgets::chat_room_item.dart::AppChatRoomItem" {
+  +DocumentSnapshot<Object?> document
+  +BuildContext context
+  +UserProvider provider
+  +Widget build()
+}
+
+"iep_app::mvc::views::chat_page::widgets::chat_room_item.dart::AppChatRoomItem" o-- "cloud_firestore::cloud_firestore.dart::DocumentSnapshot<Object>"
+"iep_app::mvc::views::chat_page::widgets::chat_room_item.dart::AppChatRoomItem" o-- "flutter::src::widgets::framework.dart::BuildContext"
+"iep_app::mvc::views::chat_page::widgets::chat_room_item.dart::AppChatRoomItem" o-- "iep_app::mvc::providers::user_provider.dart::UserProvider"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::chat_page::widgets::chat_room_item.dart::AppChatRoomItem"
+
+class "iep_app::mvc::views::chat_page::widgets::message_item.dart::AppMessageItem" {
+  +DocumentSnapshot<Object?> document
+  +double maxWidth
+  +Widget build()
+}
+
+"iep_app::mvc::views::chat_page::widgets::message_item.dart::AppMessageItem" o-- "cloud_firestore::cloud_firestore.dart::DocumentSnapshot<Object>"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::chat_page::widgets::message_item.dart::AppMessageItem"
+
+class "iep_app::mvc::views::home_page::contract_details_page.dart::ContractDetailsPage" {
+  +ContractModel contract
+  +Widget build()
+  -Widget _buildInfoRow()
+}
+
+"iep_app::mvc::views::home_page::contract_details_page.dart::ContractDetailsPage" o-- "iep_app::mvc::models::contract_model.dart::ContractModel"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::home_page::contract_details_page.dart::ContractDetailsPage"
+
+class "iep_app::mvc::views::home_page::contract_details_page.dart::ContractTextRenderer" {
+  +String text
+  +TextStyle? baseStyle
+  +Widget build()
+}
+
+"iep_app::mvc::views::home_page::contract_details_page.dart::ContractTextRenderer" o-- "flutter::src::painting::text_style.dart::TextStyle"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::home_page::contract_details_page.dart::ContractTextRenderer"
+
+class "iep_app::mvc::views::home_page::home_page.dart::HomePage" {
+  +State<HomePage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "iep_app::mvc::views::home_page::home_page.dart::HomePage"
+
+class "iep_app::mvc::views::home_page::home_page.dart::_HomePageState" {
+  +SavedProjectsController savedController
+  -HomeController _controller
+  +void initState()
+  +void dispose()
+  +Widget build()
+}
+
+"iep_app::mvc::views::home_page::home_page.dart::_HomePageState" o-- "iep_app::mvc::controllers::home_page::saved_projects_controller.dart::SavedProjectsController"
+"iep_app::mvc::views::home_page::home_page.dart::_HomePageState" o-- "iep_app::mvc::controllers::home_page::home_controller.dart::HomeController"
+"flutter::src::widgets::framework.dart::State" <|-- "iep_app::mvc::views::home_page::home_page.dart::_HomePageState"
+
+class "iep_app::mvc::views::home_page::my_contracts_page.dart::MyContractsPage" {
+  +Widget build()
+  -Widget _buildContractCard()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::home_page::my_contracts_page.dart::MyContractsPage"
+
+class "iep_app::mvc::views::home_page::my_projects_page.dart::MyProjectsPage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::home_page::my_projects_page.dart::MyProjectsPage"
+
+class "iep_app::mvc::views::home_page::my_transaction_page.dart::MyTransactionPage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::home_page::my_transaction_page.dart::MyTransactionPage"
+
+class "iep_app::mvc::views::home_page::saved_projects_page.dart::SavedProjectsPage" {
+  +SavedProjectsController controller
+  +Widget build()
+}
+
+"iep_app::mvc::views::home_page::saved_projects_page.dart::SavedProjectsPage" o-- "iep_app::mvc::controllers::home_page::saved_projects_controller.dart::SavedProjectsController"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::home_page::saved_projects_page.dart::SavedProjectsPage"
+
+class "iep_app::mvc::views::home_page::widgets::dashboard_button.dart::AppDashboardButton" {
+  +String text
+  +IconData icon
+  +void Function() onPressed
+  +Widget build()
+}
+
+"iep_app::mvc::views::home_page::widgets::dashboard_button.dart::AppDashboardButton" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"iep_app::mvc::views::home_page::widgets::dashboard_button.dart::AppDashboardButton" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::home_page::widgets::dashboard_button.dart::AppDashboardButton"
+
+class "iep_app::mvc::views::home_page::widgets::dashboard_button_container.dart::AppDashboardContainer" {
+  +List<AppDashboardButton> buttons
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::home_page::widgets::dashboard_button_container.dart::AppDashboardContainer"
+
+class "iep_app::mvc::views::home_page::widgets::investment_tile.dart::InvestmentTile" {
+  +TransactionModel transaction
+  +Widget build()
+}
+
+"iep_app::mvc::views::home_page::widgets::investment_tile.dart::InvestmentTile" o-- "iep_app::mvc::models::transaction_model.dart::TransactionModel"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::home_page::widgets::investment_tile.dart::InvestmentTile"
+
+class "iep_app::mvc::views::home_page::widgets::saved_projects_cards.dart::SavedProjectCard" {
+  +String title
+  +String subtitle
+  +double progress
+  +String imageUrl
+  +void Function()? onUnsaveTap
+  +void Function()? onCardTap
+  +bool showBookmarkIcon
+  +Widget build()
+  -Widget _placeholder()
+}
+
+"iep_app::mvc::views::home_page::widgets::saved_projects_cards.dart::SavedProjectCard" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::home_page::widgets::saved_projects_cards.dart::SavedProjectCard"
+
+class "iep_app::mvc::views::home_page::widgets::saved_projects_container.dart::SavedProjectsContainer" {
+  +SavedProjectsController controller
+  +Widget build()
+}
+
+"iep_app::mvc::views::home_page::widgets::saved_projects_container.dart::SavedProjectsContainer" o-- "iep_app::mvc::controllers::home_page::saved_projects_controller.dart::SavedProjectsController"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::home_page::widgets::saved_projects_container.dart::SavedProjectsContainer"
+
+class "iep_app::mvc::views::home_page::widgets::snapshot_card.dart::AppSnapshotCard" {
+  +String title
+  +String number
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::home_page::widgets::snapshot_card.dart::AppSnapshotCard"
+
+class "iep_app::mvc::views::home_page::widgets::snapshot_container.dart::AppSnapshotContainer" {
+  +List<AppSnapshotCard> cards
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::home_page::widgets::snapshot_container.dart::AppSnapshotContainer"
+
+class "iep_app::mvc::views::layout::blocked_user_screen.dart::BlockedUserScreen" {
+  -EmailSupport _emailService
+  +AccountController controller
+  +Widget build()
+}
+
+"iep_app::mvc::views::layout::blocked_user_screen.dart::BlockedUserScreen" o-- "iep_app::core::services::email_support.dart::EmailSupport"
+"iep_app::mvc::views::layout::blocked_user_screen.dart::BlockedUserScreen" o-- "iep_app::mvc::controllers::account_page::account_controller.dart::AccountController"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::layout::blocked_user_screen.dart::BlockedUserScreen"
+
+class "iep_app::mvc::views::layout::contactUs_page.dart::ContactUsPage" {
+  +Widget build()
+  -Widget _socialIcon()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::layout::contactUs_page.dart::ContactUsPage"
+
+class "iep_app::mvc::views::layout::layout.dart::Layout" {
+  +State<Layout> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "iep_app::mvc::views::layout::layout.dart::Layout"
+
+class "iep_app::mvc::views::layout::layout.dart::_LayoutState" {
+  -int _currentIndex
+  -void _onNavTapped()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "iep_app::mvc::views::layout::layout.dart::_LayoutState"
+
+class "iep_app::mvc::views::layout::notification_page.dart::NotificationPage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::layout::notification_page.dart::NotificationPage"
+
+class "iep_app::mvc::views::layout::un_found_page.dart::AppUnFoundPage" {
+  +IconData? icon
+  +String text
+  +String? subText
+  +void Function()? tryAgain
+  +String buttonText
+  +Widget build()
+}
+
+"iep_app::mvc::views::layout::un_found_page.dart::AppUnFoundPage" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"iep_app::mvc::views::layout::un_found_page.dart::AppUnFoundPage" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::layout::un_found_page.dart::AppUnFoundPage"
+
+class "iep_app::mvc::views::layout::widgets::bottom_nav_item.dart::BottomNavItem" {
+  {static} +BottomNavigationBarItem add()
+}
+
+class "iep_app::mvc::views::layout::widgets::burger_menu_button.dart::BurgerMenuButton" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::layout::widgets::burger_menu_button.dart::BurgerMenuButton"
+
+class "iep_app::mvc::views::layout::widgets::notification_icon.dart::NotificationButton" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::layout::widgets::notification_icon.dart::NotificationButton"
+
+class "iep_app::mvc::views::layout::widgets::notification_tile.dart::AppNotificationTile" {
+  +String title
+  +String subtitle
+  +String time
+  +bool unread
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::layout::widgets::notification_tile.dart::AppNotificationTile"
+
+class "iep_app::mvc::views::layout::widgets::support_dialog.dart::AppSupportDialog" {
+  {static} +void show()
+  -dynamic _launchEmail()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::layout::widgets::support_dialog.dart::AppSupportDialog"
+
+class "iep_app::mvc::views::on_boarding::first.dart::OnboardPage1" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::on_boarding::first.dart::OnboardPage1"
+
+class "iep_app::mvc::views::on_boarding::second.dart::OnboardPage2" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::on_boarding::second.dart::OnboardPage2"
+
+class "iep_app::mvc::views::on_boarding::third.dart::OnboardPage3" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::on_boarding::third.dart::OnboardPage3"
+
+class "iep_app::mvc::views::on_boarding::widgets::indicator.dart::Indicator" {
+  +int pageNumber
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::on_boarding::widgets::indicator.dart::Indicator"
+
+class "iep_app::mvc::views::on_boarding::widgets::on_boarding_button.dart::AppOnboardingButton" {
+  +String insideText
+  +void Function()? onPressed
+  +bool isSecondary
+  +Widget build()
+}
+
+"iep_app::mvc::views::on_boarding::widgets::on_boarding_button.dart::AppOnboardingButton" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::on_boarding::widgets::on_boarding_button.dart::AppOnboardingButton"
+
+class "iep_app::mvc::views::payment::add_card_page.dart::AddCardPage" {
+  +State<AddCardPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "iep_app::mvc::views::payment::add_card_page.dart::AddCardPage"
+
+class "iep_app::mvc::views::payment::add_card_page.dart::_AddCardPageState" {
+  -GlobalKey<FormState> _formKey
+  -AddCardController _controller
+  +AppColorScheme colors
+  +void dispose()
+  +Widget build()
+  -InputDecoration _inputDecoration()
+}
+
+"iep_app::mvc::views::payment::add_card_page.dart::_AddCardPageState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"iep_app::mvc::views::payment::add_card_page.dart::_AddCardPageState" o-- "iep_app::mvc::controllers::payment::add_card_controller.dart::AddCardController"
+"iep_app::mvc::views::payment::add_card_page.dart::_AddCardPageState" o-- "iep_app::core::constans::colors.dart::AppColorScheme"
+"flutter::src::widgets::framework.dart::State" <|-- "iep_app::mvc::views::payment::add_card_page.dart::_AddCardPageState"
+
+class "iep_app::mvc::views::payment::payment_success_page.dart::PaymentSuccessPage" {
+  +double amount
+  +String projectName
+  +String date
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::payment::payment_success_page.dart::PaymentSuccessPage"
+
+class "iep_app::mvc::views::payment::select_payment_page.dart::SelectPaymentPage" {
+  +ProjectModel project
+  +double amount
+  +TransactionType type
+  +State<SelectPaymentPage> createState()
+}
+
+"iep_app::mvc::views::payment::select_payment_page.dart::SelectPaymentPage" o-- "iep_app::mvc::models::project_model.dart::ProjectModel"
+"iep_app::mvc::views::payment::select_payment_page.dart::SelectPaymentPage" o-- "iep_app::mvc::models::transaction_model.dart::TransactionType"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "iep_app::mvc::views::payment::select_payment_page.dart::SelectPaymentPage"
+
+class "iep_app::mvc::views::payment::select_payment_page.dart::_SelectPaymentPageState" {
+  +PaymentController controller
+  -CardsRepository _cardsRepo
+  -String? _selectedCardId
+  +AppColorScheme colors
+  +void initState()
+  +void dispose()
+  +Widget build()
+}
+
+"iep_app::mvc::views::payment::select_payment_page.dart::_SelectPaymentPageState" o-- "iep_app::mvc::controllers::payment::payment_controller.dart::PaymentController"
+"iep_app::mvc::views::payment::select_payment_page.dart::_SelectPaymentPageState" o-- "iep_app::mvc::repositories::cards_repository.dart::CardsRepository"
+"iep_app::mvc::views::payment::select_payment_page.dart::_SelectPaymentPageState" o-- "iep_app::core::constans::colors.dart::AppColorScheme"
+"flutter::src::widgets::framework.dart::State" <|-- "iep_app::mvc::views::payment::select_payment_page.dart::_SelectPaymentPageState"
+
+class "iep_app::mvc::views::payment::widgets::bill_row.dart::AppBillRow" {
+  +String label
+  +String value
+  +bool isBold
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::payment::widgets::bill_row.dart::AppBillRow"
+
+class "iep_app::mvc::views::project_page::add_new_project_page.dart::AddProjectPage" {
+  +ProjectModel? projectToEdit
+  +State<AddProjectPage> createState()
+}
+
+"iep_app::mvc::views::project_page::add_new_project_page.dart::AddProjectPage" o-- "iep_app::mvc::models::project_model.dart::ProjectModel"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "iep_app::mvc::views::project_page::add_new_project_page.dart::AddProjectPage"
+
+class "iep_app::mvc::views::project_page::add_new_project_page.dart::_AddProjectPageState" {
+  -GlobalKey<FormState> _formKey
+  -AddProjectController _controller
+  +void initState()
+  +void dispose()
+  +Widget build()
+}
+
+"iep_app::mvc::views::project_page::add_new_project_page.dart::_AddProjectPageState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"iep_app::mvc::views::project_page::add_new_project_page.dart::_AddProjectPageState" o-- "iep_app::mvc::controllers::project_page::add_project_controller.dart::AddProjectController"
+"flutter::src::widgets::framework.dart::State" <|-- "iep_app::mvc::views::project_page::add_new_project_page.dart::_AddProjectPageState"
+
+class "iep_app::mvc::views::project_page::projectsDetails_page.dart::ProjectDetailsPage" {
+  +ProjectModel project
+  +State<ProjectDetailsPage> createState()
+}
+
+"iep_app::mvc::views::project_page::projectsDetails_page.dart::ProjectDetailsPage" o-- "iep_app::mvc::models::project_model.dart::ProjectModel"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "iep_app::mvc::views::project_page::projectsDetails_page.dart::ProjectDetailsPage"
+
+class "iep_app::mvc::views::project_page::projectsDetails_page.dart::_ProjectDetailsPageState" {
+  +ProjectDetailsController controller
+  +void initState()
+  +void dispose()
+  +Widget build()
+  -void _showUserReportDialog()
+  -void _showDeleteConfirmation()
+  -Widget _buildOwnerSection()
+}
+
+"iep_app::mvc::views::project_page::projectsDetails_page.dart::_ProjectDetailsPageState" o-- "iep_app::mvc::controllers::project_page::projects_datails_controllre.dart::ProjectDetailsController"
+"flutter::src::widgets::framework.dart::State" <|-- "iep_app::mvc::views::project_page::projectsDetails_page.dart::_ProjectDetailsPageState"
+
+class "iep_app::mvc::views::project_page::projects_view.dart::ProjectsView" {
+  +State<ProjectsView> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "iep_app::mvc::views::project_page::projects_view.dart::ProjectsView"
+
+class "iep_app::mvc::views::project_page::projects_view.dart::_ProjectsViewState" {
+  +HomeController homeController
+  +ProjectsController controller
+  +void initState()
+  +void dispose()
+  -Widget _buildList()
+  +Widget build()
+}
+
+"iep_app::mvc::views::project_page::projects_view.dart::_ProjectsViewState" o-- "iep_app::mvc::controllers::home_page::home_controller.dart::HomeController"
+"iep_app::mvc::views::project_page::projects_view.dart::_ProjectsViewState" o-- "iep_app::mvc::controllers::project_page::project_controller.dart::ProjectsController"
+"flutter::src::widgets::framework.dart::State" <|-- "iep_app::mvc::views::project_page::projects_view.dart::_ProjectsViewState"
+
+class "iep_app::mvc::views::project_page::widgets::add_comment_section.dart::AddCommentSection" {
+  +ProjectDetailsController controller
+  +Widget build()
+}
+
+"iep_app::mvc::views::project_page::widgets::add_comment_section.dart::AddCommentSection" o-- "iep_app::mvc::controllers::project_page::projects_datails_controllre.dart::ProjectDetailsController"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::project_page::widgets::add_comment_section.dart::AddCommentSection"
+
+class "iep_app::mvc::views::project_page::widgets::catagories_list.dart::AppCatagoriesList" {
+  +List<String> categories
+  +dynamic Function(String) onSelected
+  +State<AppCatagoriesList> createState()
+}
+
+"iep_app::mvc::views::project_page::widgets::catagories_list.dart::AppCatagoriesList" o-- "null::dynamic Function(String)"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "iep_app::mvc::views::project_page::widgets::catagories_list.dart::AppCatagoriesList"
+
+class "iep_app::mvc::views::project_page::widgets::catagories_list.dart::_AppCatagoriesListState" {
+  +int selectedIndex
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "iep_app::mvc::views::project_page::widgets::catagories_list.dart::_AppCatagoriesListState"
+
+class "iep_app::mvc::views::project_page::widgets::image_project_header.dart::ProjectImageHeader" {
+  +List<String> images
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::project_page::widgets::image_project_header.dart::ProjectImageHeader"
+
+class "iep_app::mvc::views::project_page::widgets::investment_bar.dart::InvestmentBar" {
+  +double current
+  +double goal
+  +int investors
+  +ProjectModel project
+  -void _showAmountDialog()
+  +Widget build()
+}
+
+"iep_app::mvc::views::project_page::widgets::investment_bar.dart::InvestmentBar" o-- "iep_app::mvc::models::project_model.dart::ProjectModel"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::project_page::widgets::investment_bar.dart::InvestmentBar"
+
+class "iep_app::mvc::views::project_page::widgets::project_action_buttons.dart::ProjectActionButtons" {
+  +ProjectDetailsController controller
+  +Widget build()
+}
+
+"iep_app::mvc::views::project_page::widgets::project_action_buttons.dart::ProjectActionButtons" o-- "iep_app::mvc::controllers::project_page::projects_datails_controllre.dart::ProjectDetailsController"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::project_page::widgets::project_action_buttons.dart::ProjectActionButtons"
+
+class "iep_app::mvc::views::project_page::widgets::project_button.dart::ProjectButton" {
+  +String text
+  +void Function() onPressed
+  +Widget build()
+}
+
+"iep_app::mvc::views::project_page::widgets::project_button.dart::ProjectButton" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::project_page::widgets::project_button.dart::ProjectButton"
+
+class "iep_app::mvc::views::project_page::widgets::project_card.dart::ProjectCard" {
+  +ProjectModel project
+  +State<ProjectCard> createState()
+}
+
+"iep_app::mvc::views::project_page::widgets::project_card.dart::ProjectCard" o-- "iep_app::mvc::models::project_model.dart::ProjectModel"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "iep_app::mvc::views::project_page::widgets::project_card.dart::ProjectCard"
+
+class "iep_app::mvc::views::project_page::widgets::project_card.dart::_ProjectCardState" {
+  +double currentInvestment
+  +double goalInvestment
+  +String title
+  +String description
+  +List<String> images
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "iep_app::mvc::views::project_page::widgets::project_card.dart::_ProjectCardState"
+
+class "iep_app::mvc::views::project_page::widgets::project_comments_list.dart::ProjectCommentsList" {
+  +String projectId
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::project_page::widgets::project_comments_list.dart::ProjectCommentsList"
+
+class "iep_app::mvc::views::project_page::widgets::project_comments_list.dart::_CommentTile" {
+  +String name
+  +double rating
+  +String text
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::project_page::widgets::project_comments_list.dart::_CommentTile"
+
+class "iep_app::mvc::views::project_page::widgets::project_icon_button.dart::ProjectIconButton" {
+  +String? label
+  +IconData icon
+  +void Function() onTap
+  +Widget build()
+}
+
+"iep_app::mvc::views::project_page::widgets::project_icon_button.dart::ProjectIconButton" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"iep_app::mvc::views::project_page::widgets::project_icon_button.dart::ProjectIconButton" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::project_page::widgets::project_icon_button.dart::ProjectIconButton"
+
+class "iep_app::mvc::views::project_page::widgets::project_image_slider.dart::ProjectImageSlider" {
+  +List<String> images
+  +double height
+  +BorderRadiusGeometry? borderRadius
+  +State<ProjectImageSlider> createState()
+}
+
+"iep_app::mvc::views::project_page::widgets::project_image_slider.dart::ProjectImageSlider" o-- "flutter::src::painting::border_radius.dart::BorderRadiusGeometry"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "iep_app::mvc::views::project_page::widgets::project_image_slider.dart::ProjectImageSlider"
+
+class "iep_app::mvc::views::project_page::widgets::project_image_slider.dart::_ProjectImageSliderState" {
+  -int _currentIndex
+  -void _nextImage()
+  -void _prevImage()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "iep_app::mvc::views::project_page::widgets::project_image_slider.dart::_ProjectImageSliderState"
+
+class "iep_app::mvc::views::project_page::widgets::project_image_slider.dart::_ArrowButton" {
+  +IconData icon
+  +void Function() onPressed
+  +Widget build()
+}
+
+"iep_app::mvc::views::project_page::widgets::project_image_slider.dart::_ArrowButton" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"iep_app::mvc::views::project_page::widgets::project_image_slider.dart::_ArrowButton" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::project_page::widgets::project_image_slider.dart::_ArrowButton"
+
+class "iep_app::mvc::views::project_page::widgets::project_rating_bar.dart::ProjectRatingBar" {
+  +double rating
+  +int reviewCount
+  +double iconSize
+  +bool showText
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::project_page::widgets::project_rating_bar.dart::ProjectRatingBar"
+
+class "iep_app::mvc::views::project_page::widgets::search_bar.dart::AppSearchBar" {
+  +void Function(dynamic) onChanged
+  +Widget build()
+}
+
+"iep_app::mvc::views::project_page::widgets::search_bar.dart::AppSearchBar" o-- "flutter::src::foundation::basic_types.dart::void Function(dynamic)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "iep_app::mvc::views::project_page::widgets::search_bar.dart::AppSearchBar"
+
+
+@enduml
