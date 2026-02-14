@@ -3,7 +3,6 @@
 [![Flutter](https://img.shields.io/badge/Flutter-3.x-blue?logo=flutter)](https://flutter.dev)
 [![Firebase](https://img.shields.io/badge/Firebase-Auth%20|%20Firestore%20|%20Storage-orange?logo=firebase)](https://firebase.google.com)
 [![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?logo=dart)](https://dart.dev)
-[![License](https://img.shields.io/badge/License-MIT-green)](./LICENSE)
 
 **IEP (Investment & Entrepreneurship Platform)** is a comprehensive cross-platform application (Mobile & Web) designed to bridge the gap between investors and project owners. It facilitates secure funding, project tracking, and real-time communication.
 
